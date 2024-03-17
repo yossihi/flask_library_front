@@ -330,11 +330,12 @@
         const handleCardHover = (event) => {
             const card = event.target;
             const photoPath = card.getAttribute("data-photo-path");
-            console.log(photoPath);
-
+            
             if (event.type === "mouseenter") {
                 // Show background image on hover
-                card.style.backgroundImage = MY_SERVER + photoPath;
+                my_path = MY_SERVER + photoPath
+                console.log(my_path);
+                card.style.backgroundImage = my_path
                 card.style.backgroundPosition = "center"; // Center the background image
 
             } else {
