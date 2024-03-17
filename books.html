@@ -214,7 +214,7 @@
             const photoPath = card.getAttribute("data-photo-path");
 
             if (event.type === "mouseenter") {
-                card.style.backgroundImage = `url('../${photoPath}')`;
+                card.style.backgroundImage = `url('..${photoPath}')`;
                 card.style.backgroundPosition = "center"; // Center the background image
             } else {
                 card.style.backgroundImage = "none";
