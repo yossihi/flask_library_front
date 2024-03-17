@@ -278,7 +278,7 @@
                     cardBody.classList.add('card-body');
 
                     // Set background image using the path to the unique file photo
-                    card.style.backgroundImage = MY_SERVER + book.photo;
+                    card.style.backgroundImage = "none";
                     card.setAttribute("data-photo-path", book.photo);
 
                     // Create elements for book details and loan button
@@ -333,7 +333,7 @@
             
             if (event.type === "mouseenter") {
                 // Show background image on hover
-                my_path = MY_SERVER + photoPath
+                my_path = MY_SERVER + "main/" + photoPath
                 console.log(my_path);
                 card.style.backgroundImage = my_path
                 card.style.backgroundPosition = "center"; // Center the background image
