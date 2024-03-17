@@ -1,0 +1,209 @@
+<!DOCTYPE html>
+<html lang="en">
+
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link rel="icon" type="image/x-icon" href="resurces/images/favicon.gif">
+    <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/toastify-js/src/toastify.min.css">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
+
+    <link rel="stylesheet" href="resurces/books.css">
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL"
+        crossorigin="anonymous"></script>
+    <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/toastify-js"></script>
+</head>
+
+
+<body>
+    <header>
+        <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
+            <div class="container">
+                <a id="user_name" class="navbar-brand" href="./login.html"><svg xmlns="http://www.w3.org/2000/svg"
+                        width="26" height="26" fill="currentColor" class="bi bi-book" viewBox="0 0 16 16">
+                        <path
+                            d="M1 2.828c.885-.37 2.154-.769 3.388-.893 1.33-.134 2.458.063 3.112.752v9.746c-.935-.53-2.12-.603-3.213-.493-1.18.12-2.37.461-3.287.811zm7.5-.141c.654-.689 1.782-.886 3.112-.752 1.234.124 2.503.523 3.388.893v9.923c-.918-.35-2.107-.692-3.287-.81-1.094-.111-2.278-.039-3.213.492zM8 1.783C7.015.936 5.587.81 4.287.94c-1.514.153-3.042.672-3.994 1.105A.5.5 0 0 0 0 2.5v11a.5.5 0 0 0 .707.455c.882-.4 2.303-.881 3.68-1.02 1.409-.142 2.59.087 3.223.877a.5.5 0 0 0 .78 0c.633-.79 1.814-1.019 3.222-.877 1.378.139 2.8.62 3.681 1.02A.5.5 0 0 0 16 13.5v-11a.5.5 0 0 0-.293-.455c-.952-.433-2.48-.952-3.994-1.105C10.413.809 8.985.936 8 1.783" />
+                    </svg> Log Out</a>
+                <div id="gret_user" class="navbar-brand"></div>
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse"
+                    data-bs-target="#navbarNavDropdown" aria-controls="navbarNavDropdown" aria-expanded="false"
+                    aria-label="Toggle navigation" id="admin_button" disabled="true">Admin Only
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+                <div class="collapse navbar-collapse justify-content-end" id="navbarNavDropdown">
+                    <h4 style="color: white;">Admin Menu:</h4>
+                    <ul class="navbar-nav">
+                        <li class="nav-item">
+                            <button id="userBtn" class="nav-link btn btn-outline-light" onclick="user_menu()"
+                                style="color: white;" disabled="false">User Menu</button>
+                        </li>
+                        <li class="nav-item">
+                            <button id="booksBtn" class="nav-link btn btn-outline-light" onclick="books()"
+                                style="color: white;" disabled="true">Books</button>
+                        </li>
+                        <li class="nav-item">
+                            <button id="customersBtn" disabled="true" class="nav-link btn btn-outline-light"
+                                onclick="customers()" style="color: white;">Customers</button>
+                        </li>
+                        <li class="nav-item">
+                            <button id="loansBtn" disabled="true" class="nav-link btn btn-outline-light"
+                                onclick="loans()" style="color: white;">Loan's</button>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </nav>
+    </header>
+
+
+    <div class="cust-form">
+        <div class="btn-group btn-group-lg d-flex justify-content-center" role="group" aria-label="Large button group">
+            <button type="button" class="btn btn-outline-primary" onclick="get_loans()">Show All</button>
+            <button type="button" id="searchButton" class="btn btn-outline-primary" onclick="search_book()">Search
+                Loan by:</button>
+            <select name="searchTerm" id="searchTerm" class="btn btn-outline-primary">
+                <option value="name">Book Name</option>
+                <option value="cust">Customer</option>
+            </select>
+            <input class="btn btn-outline-primary dropdown-toggle" type="text" id="searchInpt"></input>
+
+
+        </div>
+    </div>
+
+    <div id="loanCardsContainer" class="cust-container">
+    </div>
+
+    <footer class="navbar navbar-expand-lg navbar-dark bg-primary text-light justify-content-center py-3"
+        style="position: absolute; bottom: 0%; width: 100%;">
+        &copy; 2024 Yossi's Library
+    </footer>
+
+    <script>
+        const MY_SERVER = "http://127.0.0.1:5000"
+
+        // function that check in the server if the logged-in user is admin if so the admin menu is enable 
+        const admin_menu = async () => {
+            token = sessionStorage.getItem('access_token')
+            const response = await axios.get(`${MY_SERVER}/is_admin`, {
+                headers: {
+                    Authorization: `Bearer ${token}`,
+                },
+            });
+            if (response.data.is_admin === true) {
+                admin_button.disabled = false
+                booksBtn.disabled = false
+                customersBtn.disabled = false
+                loansBtn.disabled = false
+                userBtn.disabled = false
+            }
+            user_name = sessionStorage.getItem("user name")
+            gret_user.innerHTML = `Welcome ${user_name}`
+        }
+        admin_menu()
+
+        // redirect to the 'user menu' page
+        const user_menu = () => {
+            window.location.href = "./user_menu.html"
+        }
+
+        // redirect to the 'customers' pag
+        const customers = () => {
+            window.location.href = "./customers.html"
+        }
+
+        // redirect to the 'books' pag
+        const books = () => {
+            window.location.href = "books.html"
+        }
+
+        // get from the server the list of all active loans
+        const get_loans = async () => {
+            token = sessionStorage.getItem('access_token')
+
+            res = await axios.get(`${MY_SERVER}/get_loans`, {
+                headers: {
+                    Authorization: `Bearer ${token}`,
+                },
+            });
+            loans_lst = res.data.loans
+            displayCards(loans_lst)
+        }
+
+        // display the list of loans that get from the 'get_loans' function
+        const displayCards = (loanList) => {
+            const loanCardsContainer = document.getElementById("loanCardsContainer");
+
+            // Clear previous content
+            loanCardsContainer.innerHTML = "";
+
+            loanList.forEach((loan) => {
+                // Create a card element
+                const card = document.createElement("div");
+                card.classList.add("cust-card");
+
+                // Fill in the card with book information
+                card.innerHTML = `
+                <h5 class="card-title">${loan.book_name}</h5>
+                <p class="cust-text">Customer: ${loan.cust_name}</p>
+                <p class="cust-age">Loan Date: ${loan.loan_date}</p>
+                <p class="cust-age">Return Date: ${loan.Returndate}</p>
+                `;
+                //if the loan is late change the background to red
+                if (loan.is_late === true) {
+                    card.style.backgroundColor = "red"
+                }
+                loanCardsContainer.appendChild(card)
+            });
+        };
+
+        //search loan by book or customer name
+        const search_book = async () => {
+            const searchTerm = document.getElementById("searchTerm").value;
+            const searchInput = document.getElementById("searchInpt").value;
+
+            // Make sure searchInput is not empty
+            if (searchInput.trim() === "") {
+                alert("Please enter a search term.");
+                return;
+            }
+
+            try {
+                // Fetch loans from the server
+                token = sessionStorage.getItem('access_token')
+                const res = await axios.get(`${MY_SERVER}/get_loans`, {
+                    headers: {
+                        Authorization: `Bearer ${token}`,
+                    },
+                });
+                const loans_lst = res.data.loans;
+
+                // Filter loans based on the selected search term and input value
+                const filteredLoans = loans_lst.filter((loan) => {
+                    switch (searchTerm) {
+                        case "name":
+                            return loan.book_name.toLowerCase().includes(searchInput.toLowerCase());
+                        case "cust":
+                            return loan.cust_name.toLowerCase().includes(searchInput.toLowerCase());
+                        default:
+                            return false;
+                    }
+                });
+
+                // Display the filtered loans
+                displayCards(filteredLoans);
+            } catch (error) {
+                console.error("Error fetching loans:", error);
+            }
+        };
+
+        get_loans()
+    </script>
+
+</html>

@@ -1,0 +1,243 @@
+<!DOCTYPE html>
+<html lang="en">
+
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link rel="icon" type="image/x-icon" href="images/favicon.gif">
+    <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/toastify-js/src/toastify.min.css">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
+
+    <link rel="stylesheet" href="resurces/books.css">
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL"
+        crossorigin="anonymous"></script>
+    <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/toastify-js"></script>
+</head>
+
+
+<body>
+    <header>
+        <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
+            <div class="container">
+                <a id="user_name" class="navbar-brand" href="./login.html"><svg xmlns="http://www.w3.org/2000/svg"
+                        width="26" height="26" fill="currentColor" class="bi bi-book" viewBox="0 0 16 16">
+                        <path
+                            d="M1 2.828c.885-.37 2.154-.769 3.388-.893 1.33-.134 2.458.063 3.112.752v9.746c-.935-.53-2.12-.603-3.213-.493-1.18.12-2.37.461-3.287.811zm7.5-.141c.654-.689 1.782-.886 3.112-.752 1.234.124 2.503.523 3.388.893v9.923c-.918-.35-2.107-.692-3.287-.81-1.094-.111-2.278-.039-3.213.492zM8 1.783C7.015.936 5.587.81 4.287.94c-1.514.153-3.042.672-3.994 1.105A.5.5 0 0 0 0 2.5v11a.5.5 0 0 0 .707.455c.882-.4 2.303-.881 3.68-1.02 1.409-.142 2.59.087 3.223.877a.5.5 0 0 0 .78 0c.633-.79 1.814-1.019 3.222-.877 1.378.139 2.8.62 3.681 1.02A.5.5 0 0 0 16 13.5v-11a.5.5 0 0 0-.293-.455c-.952-.433-2.48-.952-3.994-1.105C10.413.809 8.985.936 8 1.783" />
+                    </svg> Log Out</a>
+                <div id="gret_user" class="navbar-brand"></div>
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse"
+                    data-bs-target="#navbarNavDropdown" aria-controls="navbarNavDropdown" aria-expanded="false"
+                    aria-label="Toggle navigation" id="admin_button" disabled="true">Admin Only
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+                <div class="collapse navbar-collapse justify-content-end" id="navbarNavDropdown">
+                    <h4 style="color: white;">Admin Menu:</h4>
+                    <ul class="navbar-nav">
+                        <li class="nav-item">
+                            <button id="userBtn" class="nav-link btn btn-outline-light" onclick="user_menu()"
+                                style="color: white;" disabled="false">User Menu</button>
+                        </li>
+                        <li class="nav-item">
+                            <button id="booksBtn" class="nav-link btn btn-outline-light" onclick="books()"
+                                style="color: white;" disabled="true">Books</button>
+                        </li>
+                        <li class="nav-item">
+                            <button id="customersBtn" disabled="true" class="nav-link btn btn-outline-light"
+                                onclick="customers()" style="color: white;">Customers</button>
+                        </li>
+                        <li class="nav-item">
+                            <button id="loansBtn" disabled="true" class="nav-link btn btn-outline-light"
+                                onclick="loans()" style="color: white;">Loan's</button>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </nav>
+    </header>
+
+
+    <div class="cust-form">
+        <div class="btn-group btn-group-lg d-flex justify-content-center" role="group" aria-label="Large button group">
+            <button type="button" class="btn btn-outline-primary" onclick="getCustomers()">Show All</button>
+            <button type="button" id="searchButton" class="btn btn-outline-primary" onclick="search_cust()">Search
+                Customer</button>
+            <input class="btn btn-outline-primary dropdown-toggle" type="text" id="searchInpt"></input>
+
+
+        </div>
+    </div>
+
+    <div id="custCardsContainer" class="cust-container">
+    </div>
+
+
+    <footer class="navbar navbar-expand-lg navbar-dark bg-primary text-light justify-content-center py-3"
+        style="position: absolute; bottom: 0%; width: 100%;">
+        &copy; 2024 Yossi's Library
+    </footer>
+
+    <script>
+        const MY_SERVER = "http://127.0.0.1:5000"
+
+        // check if  the user is admin and enable the user menu
+        const admin_menu = async () => {
+            token = sessionStorage.getItem('access_token')
+            const response = await axios.get(`${MY_SERVER}/is_admin`, {
+                headers: {
+                    Authorization: `Bearer ${token}`,
+                },
+            });
+            if (response.data.is_admin === true) {
+                admin_button.disabled = false
+                booksBtn.disabled = false
+                customersBtn.disabled = false
+                loansBtn.disabled = false
+                userBtn.disabled = false
+            }
+            user_name = sessionStorage.getItem("user name")
+            gret_user.innerHTML = `Welcome ${user_name}`
+        }
+        admin_menu()
+
+        // redirect to the 'books' page
+        const books = () => {
+            window.location.href = "books.html"
+        }
+
+        // redirect to the 'loans' page
+        const loans = () => {
+            window.location.href = "loans.html"
+        }
+
+        // redirect to the 'user menu' page
+        const user_menu = () => {
+            window.location.href = "./user_menu.html"
+        }
+
+        // get list of customers from the getCustomers function and display them in bootstrap cards
+        const displayCards = (custList) => {
+            const custCardsContainer = document.getElementById("custCardsContainer");
+
+            // Clear previous content
+            custCardsContainer.innerHTML = "";
+
+            custList.forEach((cust) => {
+                // Create a card element
+                const card = document.createElement("div");
+                card.classList.add("cust-card");
+
+                // Fill in the card with book information
+                card.innerHTML = `
+                <h5 class="card-title">${cust.name}</h5>
+                <p class="cust-text">City: ${cust.city}</p>
+                <p class="cust-age">Age: ${cust.age}</p>
+                
+                <p class="cust-adm" > Admin: </p>
+                <select class="inpt" name="cust_admin" id="cust_admin">
+                    <option value="${cust.is_admin}">${cust.is_admin}</option>
+                    <option value="${!cust.is_admin}">${!cust.is_admin}</option>
+                </select>
+                <div class="btn_">
+                    <button class="butn" onclick="deleteCust(${cust.id})">Del</button>
+                    <button class="butn" onclick="editCust(${cust.id})">Save</button>
+                </div>
+            `;
+                custCardsContainer.appendChild(card)
+            });
+        };
+
+        // get from the server the list of customers
+        const getCustomers = async () => {
+            try {
+                const token = sessionStorage.getItem("access_token");
+                const response = await axios.get(`${MY_SERVER}/getCustomers`, {
+                    headers: {
+                        Authorization: `Bearer ${token}`,
+                    },
+                });
+
+                const custData = response.data;
+                const custList = custData.customers;
+
+                // Display books in cards
+                displayCards(custList);
+
+                // Show a toast message
+                Toastify({
+                    text: custData.message,
+                    duration: 1500,
+                }).showToast();
+            } catch (error) {
+                console.error("Error fetching books:", error);
+            }
+        };
+
+        // Call getBooks function to fetch and display books
+        getCustomers();
+
+        // delete customer from the DB
+        const deleteCust = async (custID) => {
+            const token = sessionStorage.getItem("access_token");
+
+            try {
+                await axios.delete(`${MY_SERVER}/deleteCust/${custID}`, {
+                    headers: {
+                        Authorization: `Bearer ${token}`,
+                    },
+                });
+
+                await getCustomers(); // Wait for the getBooks() function to complete
+
+                // Show a toast message
+                Toastify({
+                    text: "Customer deleted successfully!",
+                    duration: 3000,
+                }).showToast();
+            } catch (error) {
+                console.error("Error deleting book:", error);
+            }
+        };
+
+        // change the authorisation level of a customer
+        const editCust= async (custID) => {
+            const token = sessionStorage.getItem("access_token");
+            admin_select = document.getElementById("cust_admin")
+            admin_change = admin_select.value
+            const admin_data = {"is_admin": admin_change}
+            console.log(admin_data);
+
+            res = await axios.post(`${MY_SERVER}/editCust/${custID}`, admin_data, {
+                    headers: {
+                        Authorization: `Bearer ${token}`,
+                    },
+                })
+            console.log(res.data.message);
+        }
+
+        // search customer by name
+        const search_cust = () => {
+            const nameSearch = searchInpt.value;
+            console.log(nameSearch);
+            const custListContainer = document.getElementById("custCardsContainer");
+            const custList = Array.from(custListContainer.getElementsByClassName("cust-card"));
+
+            custList.forEach((custCard) => {
+                custCard.style.display = 'none'
+                const custName = custCard.querySelector(".card-title").textContent.toLowerCase();
+                console.log(custName);
+                if (custName.includes(nameSearch)) {
+                    custCard.style.display = 'flex'
+                }
+            })
+            searchInpt.value = ""
+        };
+        
+    </script>
+
+</html>

@@ -1,0 +1,138 @@
+.container {
+    display: grid;
+    justify-content: space-between;
+}
+
+.book-form {
+    margin-top: 10px;
+    display: grid;
+    justify-content: center;
+    font-weight: 500;
+}
+
+.inpt {
+    margin: 5px;
+    background-color: rgb(83, 140, 254);
+    border: none;
+    padding: 8px;
+    border-radius: 4px;
+}
+
+.inpt:hover {
+    background-color: rgb(165, 193, 248);
+}
+
+.radio_check{
+    padding: 5px;
+    font-family: Arial, Helvetica, sans-serif;
+}
+
+.card-container {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-evenly;
+    margin-top: 2%;
+    max-height: 370px;
+    overflow-y: auto;
+}
+
+.book-card {
+    flex: 0 0 calc(40% - 20px);
+    margin: 10px;
+    padding: 20px;
+    border: none;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    transition: transform 0.3s ease-in-out;
+    background-color: rgb(83, 140, 254);
+    max-width: 350px;
+    
+    background-position: center;
+    background-size: 100% 100%; /* Set size to cover the entire card */
+    height: 200px; /* Set a fixed height for the card, adjust as needed */
+}
+
+.book-card:hover {
+    transform: translateY(-5px);
+    color: white;
+    font-weight: 700;
+}
+
+.card-title {
+    display: flex;
+    font-size: 1.0rem;
+    margin-bottom: 10px;
+    font-weight: 700;
+    font-family: Arial, Helvetica, sans-serif;
+    width: 45%;
+}
+
+.card-text {
+    margin: 13px;
+    font-size: 1rem;
+    margin-bottom: 8px;
+}
+
+.btn_ {
+    display: flex;
+    font-size: 1.0rem;
+    width: 120%;
+}
+
+.butn {
+    margin-top: 10px;
+    margin-left: 5px;
+    border-radius: 6px;
+    font-family: Arial, Helvetica, sans-serif;
+    background-color: rgb(252, 80, 80);
+    border: none;
+    width: 30%;
+}
+
+.butn:hover {
+    background-color: rgb(252, 141, 141);
+}
+
+.cust-container{
+    display: grid;
+    justify-content: center;
+}
+
+.cust-card{
+    display: flex;
+
+    width: 650px;
+    max-height: 80px;
+    align-items: baseline;
+    margin-top: 10px;
+    background-color: rgb(40, 120, 200);
+    padding: 15px;
+    border-radius: 4px;
+}
+
+.cust-text{
+    display: flex;
+    margin-left: 20px;
+    width: 400px;
+    font-weight: 400;
+    font-family: Arial, Helvetica, sans-serif;
+}
+
+.cust-form {
+    margin-top: 15px;
+    display: grid;
+    justify-content: center;
+}
+
+.cust-age {
+    display: flex;
+    width: 250px;
+    margin-bottom: 20px;
+    margin-right: 10px;
+    align-items: center;
+
+}
+.cust-adm {
+    display: flex;
+    width: max-content;
+}

@@ -1,0 +1,449 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <!-- Meta tags for character set, viewport, and title -->
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Library Loans</title>
+
+    <!-- Favicon and external stylesheets and scripts -->
+    <link rel="icon" type="image/x-icon" href="resurces/images/favicon.gif">
+    <link rel="stylesheet" href="resurces/login.css">
+    <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/toastify-js/src/toastify.min.css">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL"
+        crossorigin="anonymous"></script>
+    <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/toastify-js"></script>
+</head>
+
+<body style="background-color: rgb(254, 253, 253);">
+    <!-- Header Section -->
+    <header>
+        <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
+            <div class="container">
+                <!-- Log Out Link -->
+                <a id="user_name" class="navbar-brand" href="./login.html"><svg xmlns="http://www.w3.org/2000/svg"
+                        width="26" height="26" fill="currentColor" class="bi bi-book" viewBox="0 0 16 16">
+                        <!-- Book Icon -->
+                        <path
+                            d="M1 2.828c.885-.37 2.154-.769 3.388-.893 1.33-.134 2.458.063 3.112.752v9.746c-.935-.53-2.12-.603-3.213-.493-1.18.12-2.37.461-3.287.811zm7.5-.141c.654-.689 1.782-.886 3.112-.752 1.234.124 2.503.523 3.388.893v9.923c-.918-.35-2.107-.692-3.287-.81-1.094-.111-2.278-.039-3.213.492zM8 1.783C7.015.936 5.587.81 4.287.94c-1.514.153-3.042.672-3.994 1.105A.5.5 0 0 0 0 2.5v11a.5.5 0 0 0 .707.455c.882-.4 2.303-.881 3.68-1.02 1.409-.142 2.59.087 3.223.877a.5.5 0 0 0 .78 0c.633-.79 1.814-1.019 3.222-.877 1.378.139 2.8.62 3.681 1.02A.5.5 0 0 0 16 13.5v-11a.5.5 0 0 0-.293-.455c-.952-.433-2.48-.952-3.994-1.105C10.413.809 8.985.936 8 1.783" />
+                    </svg> Log Out</a>
+
+                <!-- Greeting User and Admin Toggle Button -->
+                <div id="gret_user" class="navbar-brand"></div>
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse"
+                    data-bs-target="#navbarNavDropdown" aria-controls="navbarNavDropdown" aria-expanded="false"
+                    aria-label="Toggle navigation" id="admin_button" disabled="true">Admin Only
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+
+                <!-- Admin Menu Dropdown -->
+                <div class="collapse navbar-collapse justify-content-end" id="navbarNavDropdown">
+                    <h4 style="color: white;">Admin Menu:</h4>
+                    <ul class="navbar-nav">
+                        <!-- User Menu Button -->
+                        <li class="nav-item">
+                            <button id="userBtn" class="nav-link btn btn-outline-light" onclick="user_menu()"
+                                style="color: white;" disabled="false">User Menu</button>
+                        </li>
+
+                        <!-- Books Button -->
+                        <li class="nav-item">
+                            <button id="booksBtn" class="nav-link btn btn-outline-light" onclick="books()"
+                                style="color: white;" disabled="true">Books</button>
+                        </li>
+
+                        <!-- Customers Button -->
+                        <li class="nav-item">
+                            <button id="customersBtn" disabled="true" class="nav-link btn btn-outline-light"
+                                onclick="customers()" style="color: white;">Customers</button>
+                        </li>
+
+                        <!-- Loans Button -->
+                        <li class="nav-item">
+                            <button id="loansBtn" disabled="true" class="nav-link btn btn-outline-light"
+                                onclick="loans()" style="color: white;">Loan's</button>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </nav>
+    </header>
+
+    <!-- Loan Form Section -->
+    <div class="loan_form_" id="loan_form">
+        <!-- Search Section (100% of the page) -->
+        <div class="loans_form">
+            <!-- Add Form Buttons (Show All Books, Search) -->
+            <div id="add_form" class="search_form" role="group" aria-label="Large button group">
+                <button class="btn btn-outline-primary">Show All Books</button>
+                <input class="btn btn-outline-primary" type="text" id="searchInpt" placeholder="Search a book">
+                <button class="btn btn-outline-primary" onclick="searchBook()">Search</button>
+            </div>
+
+            <!-- Columns for Available Books and Active Loans (50% each) -->
+            <div class="columns">
+                <!-- Available Books Column (50% of the page) -->
+                <div class="availeble_form">
+                    <h3>Available Books</h3>
+                    <!-- Container for Available Books -->
+                    <div id="available_books" class="card-columns">
+                        <!-- Available books will be dynamically added here -->
+                    </div>
+                </div>
+
+                <!-- Active Loans Column (50% of the page) -->
+                <div class="active_form">
+                    <h3>Active Loans</h3>
+                    <!-- Container for Active Loans -->
+                    <div id="active_loans" class="card-columns">
+                        <!-- Active loans will be dynamically added here -->
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer Section -->
+    <footer class="navbar navbar-expand-lg navbar-dark bg-primary text-light justify-content-center py-3"
+        style="position: absolute; bottom: 0%; width: 100%;">
+        &copy; 2024 Yossi's Library
+    </footer>
+
+    <!-- JavaScript Section -->
+    <script>
+        // API endpoint for server communication
+        const MY_SERVER = "http://127.0.0.1:5000";
+
+        // Function to check if the logged-in user is an admin and enable corresponding menu options
+        const admin_menu = async () => {
+            // Get the access token from the session storage
+            token = sessionStorage.getItem('access_token');
+            console.log('test');
+            // Make a request to the server to check if the user is an admin
+            const response = await axios.get(`${MY_SERVER}/is_admin`, {
+                headers: {
+                    Authorization: `Bearer ${token}`,
+                },
+            });
+
+            // If the user is an admin, enable admin-specific menu options
+            if (response.data.is_admin === true) {
+                admin_button.disabled = false;
+                booksBtn.disabled = false;
+                customersBtn.disabled = false;
+                loansBtn.disabled = false;
+                userBtn.disabled = false;
+            }
+
+            // Display a welcome message for the user
+            user_name = sessionStorage.getItem("user name");
+            gret_user.innerHTML = `Welcome ${user_name}`;
+        };
+
+        // Function to display toast notifications
+        const get_toastify = (msg) => {
+            Toastify({
+                text: msg,
+                duration: 2500,
+                newWindow: true,
+                close: true,
+                gravity: "bottom", // `top` or `bottom`
+                position: "right", // `left`, `center` or `right`
+                stopOnFocus: true, // Prevents dismissing of toast on hover
+                style: {
+                    background: "linear-gradient(to right, #00b09b, #96c93d)",
+                },
+                onClick: function () { } // Callback after click
+            }).showToast();
+        };
+
+        // Function to fetch and display active loans for the user
+        const get_user_loans = async () => {
+            token = sessionStorage.getItem('access_token');
+            user = sessionStorage.getItem('user name');
+
+            try {
+                const response = await axios.get(`${MY_SERVER}/user_loans`, {
+                    headers: {
+                        Authorization: `Bearer ${token}`,
+                    },
+                });
+
+                loans_lst = response.data.loans;
+                get_toastify(response.data.message);
+                displayActiveLoans(loans_lst);
+            } catch (error) {
+                console.log(error);
+            }
+        };
+
+        // Function to display the list of active loans
+        const displayActiveLoans = (loans) => {
+            const activeLoansDiv = document.getElementById('active_loans');
+
+            // Clear previous content
+            activeLoansDiv.innerHTML = '';
+
+            if (loans.length > 0) {
+                loans.forEach((loan) => {
+                    const card = document.createElement('div');
+                    card.classList.add('card', 'mb-3');
+
+                    // Set background color to red for overdue loans
+                    if (loan.is_late) {
+                        card.style.backgroundColor = "red";
+                    }
+
+                    const cardBody = document.createElement('div');
+                    cardBody.classList.add('card-body');
+
+                    // Create elements for book details and return button
+                    const bookName = document.createElement('h5');
+                    bookName.classList.add('card-title');
+                    bookName.textContent = loan.name;
+
+                    const loanDate = document.createElement('p');
+                    loanDate.classList.add('card-text');
+                    loanDate.textContent = `Loan Date: ${loan.loandate}`;
+
+                    const returnDate = document.createElement('p');
+                    returnDate.classList.add('card-text');
+                    returnDate.textContent = `Return Date: ${loan.Returndate}`;
+
+                    const returnButton = document.createElement('button');
+                    returnButton.classList.add('btn', 'btn-primary');
+                    returnButton.textContent = 'Return Loan';
+                    returnButton.addEventListener('click', () => { return_loan(loan.id) });
+
+                    // Append elements to card body
+                    cardBody.appendChild(bookName);
+                    cardBody.appendChild(loanDate);
+                    cardBody.appendChild(returnDate);
+                    cardBody.appendChild(returnButton);
+
+                    // Append card body to card
+                    card.appendChild(cardBody);
+
+                    // Append card to active loans container
+                    activeLoansDiv.appendChild(card);
+                });
+            } else {
+                // Display a message if there are no active loans
+                const noLoansMessage = document.createElement('h3');
+                noLoansMessage.textContent = 'No active loans.';
+                activeLoansDiv.appendChild(noLoansMessage);
+            }
+        };
+
+        // Function to fetch and display available books for loan
+        const unloan_books = async () => {
+            try {
+                const token = sessionStorage.getItem("access_token");
+                const response = await axios.get(`${MY_SERVER}/unloan_books`, {
+                    headers: {
+                        Authorization: `Bearer ${token}`,
+                    },
+                });
+
+                const booksData = response.data;
+                const booksList = booksData.books;
+
+                // Display available books
+                displayAvailableBooks(booksList);
+
+            } catch (error) {
+                console.error("Error fetching books:", error);
+            }
+        };
+
+        // Function to display the list of available books
+        const displayAvailableBooks = (booksList) => {
+            const availableBooksDiv = document.getElementById('available_books');
+
+            // Clear previous content
+            availableBooksDiv.innerHTML = '';
+
+            if (booksList.length > 0) {
+                booksList.forEach(book => {
+                    const card = document.createElement('div');
+                    card.classList.add('card', 'mb-3');
+
+                    const cardBody = document.createElement('div');
+                    cardBody.classList.add('card-body');
+
+                    // Set background image using the path to the unique file photo
+                    card.style.backgroundImage = "none";
+                    card.setAttribute("data-photo-path", book.photo);
+
+                    // Create elements for book details and loan button
+                    const bookName = document.createElement('h5');
+                    bookName.classList.add('card-title');
+                    bookName.textContent = book.name;
+
+                    const author = document.createElement('p');
+                    author.classList.add('card-text');
+                    author.textContent = `Author: ${book.author}`;
+
+                    const yearPublished = document.createElement('p');
+                    yearPublished.classList.add('card-text');
+                    yearPublished.textContent = `Year Published: ${book.year_pub}`;
+
+                    const loanButton = document.createElement('button');
+                    loanButton.classList.add('btn', 'btn-primary');
+                    loanButton.textContent = 'Loan Book';
+                    loanButton.addEventListener('click', () => { loanBook(book) });
+
+                    // Append elements to card body
+                    cardBody.appendChild(bookName);
+                    cardBody.appendChild(author);
+                    cardBody.appendChild(yearPublished);
+                    cardBody.appendChild(loanButton);
+
+                    // Append card body to card
+                    card.appendChild(cardBody);
+
+                    // Append card to available books container
+                    availableBooksDiv.appendChild(card);
+                });
+            } else {
+                // Display a message if there are no available books
+                const noBooksMessage = document.createElement('h3');
+                noBooksMessage.textContent = 'No available books.';
+                availableBooksDiv.appendChild(noBooksMessage);
+            }
+
+            // Add event listeners for hover effect
+            const bookCards = document.querySelectorAll(".card");
+            bookCards.forEach((card) => {
+                card.addEventListener("mouseenter", handleCardHover);
+                card.addEventListener("mouseleave", handleCardHover);
+            });
+        };
+
+        // Function to handle hover effect on book cards
+        const handleCardHover = (event) => {
+            const card = event.target;
+            const photoPath = card.getAttribute("data-photo-path");
+
+            if (event.type === "mouseenter") {
+                // Show background image on hover
+                card.style.backgroundImage = `url('../backend${photoPath}')`;
+                card.style.backgroundPosition = "center"; // Center the background image
+
+            } else {
+                // Remove background image on hover out
+                card.style.backgroundImage = "none";
+            }
+        }
+
+        // Function to handle the loaning of a book
+        const loanBook = async (book) => {
+            const token = sessionStorage.getItem("access_token");
+
+            // Create form data with the book name
+            const form_data = { "book": book.name };
+
+            // Make a request to the server to add a loan
+            const response = await axios.post(`${MY_SERVER}/add_loan`, form_data, {
+                headers: {
+                    Authorization: `Bearer ${token}`,
+                },
+            });
+
+            // Display toast notification, update available books and active loans
+            get_toastify(response.data.message);
+            unloan_books();
+            get_user_loans();
+            displayAvailableBooks(response.data.books); // Update the available books list
+        };
+
+        // Function to search for books in available books and active loans columns
+        const searchBook = () => {
+            const searchInput = document.getElementById('searchInpt').value.toLowerCase();
+
+            // Search in Available Books column
+            const availableBooksColumn = document.getElementById('available_books');
+            searchInColumn(availableBooksColumn, searchInput);
+
+            // Search in Active Loans column
+            const activeLoansColumn = document.getElementById('active_loans');
+            searchInColumn(activeLoansColumn, searchInput);
+        };
+
+        // Function to search for a book in a given column
+        const searchInColumn = (column, searchInput) => {
+            // Check if the column is not empty
+            if (column.children.length > 0) {
+                // Loop through each card in the column and check if it matches the search input
+                for (const card of column.children) {
+                    const bookNameElement = card.querySelector('.card-title');
+
+                    // Check if the card has a book title element
+                    if (bookNameElement) {
+                        const bookName = bookNameElement.textContent.toLowerCase();
+
+                        // Check if the book name contains the search input
+                        if (bookName.includes(searchInput)) {
+                            // If it matches, show the card
+                            card.style.display = 'block';
+                        } else {
+                            // If it doesn't match, hide the card
+                            card.style.display = 'none';
+                        }
+                    }
+                }
+            }
+        };
+
+        // Function to handle the return of a loan
+        const return_loan = async (loanID) => {
+            try {
+                const token = sessionStorage.getItem("access_token");
+
+                // Make a request to the server to return a loan
+                const response = await axios.delete(`${MY_SERVER}/return_loan/${loanID}`, {
+                    headers: {
+                        Authorization: `Bearer ${token}`,
+                    },
+                });
+
+                // Update user loans, available books, and display toast notification
+                get_user_loans();
+                unloan_books();
+                get_toastify(response.data.message);
+            } catch (error) {
+                console.log(error);
+            }
+        };
+
+        // Functions to navigate to different pages
+        const books = () => {
+            window.location.href = './books.html';
+        };
+
+        const customers = () => {
+            window.location.href = './customers.html';
+        };
+
+        const loans = () => {
+            window.location.href = "./loans.html";
+        };
+
+        const user_menu = () => {
+            window.location.href = "./user_menu.html";
+        };
+
+        // Initial function calls on page load
+        get_user_loans();
+        unloan_books();
+        admin_menu();
+    </script>
+</body>
+
+</html>
